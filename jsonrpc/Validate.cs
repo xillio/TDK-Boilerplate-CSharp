@@ -2,8 +2,8 @@ using TDK_Boilerplate_C_.jsonrpc;
 
 namespace TDK_Boilerplate_C_.jsonrpc;
 
-public class ResultDto : ResponseDto
+public class Validate
 {
-    public object result { get; set; }
 
 }
+

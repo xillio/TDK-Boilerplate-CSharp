@@ -2,9 +2,9 @@
 code - A Number that indicates the error type that occurred. This must be an integer.
 message - A String providing a short description of the error.
 data - A Primitive or Structured value that contains additional information about the error. This may be omitted.*/
-using TDK_Boilerplate_C_.jsonrpc;
+using TDK_Boilerplate_C_.jsonrpc.response;
 
-namespace TDK_Boilerplate_C_.jsonrpc;
+namespace TDK_Boilerplate_C_.jsonrpc.response;
 
 public class ErrorDto : ResponseDto
 {

@@ -1,4 +1,4 @@
-namespace TDK_Boilerplate_C_.jsonrpc;
+namespace TDK_Boilerplate_C_.jsonrpc.response;
 
 public class ResponseDto
 {
