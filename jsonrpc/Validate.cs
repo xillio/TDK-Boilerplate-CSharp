@@ -118,7 +118,7 @@ public class Validate
     }
 
     // Validate Request Parameters
-    public ErrorDTO validateReqParams(object @params){
+    public ErrorDTO validateRequestParameters(object @params){
         if (@params.requestParameters) 
             if (!isObject(@params.requestParameters)) 
                 return getError("Invalid request parameters");
@@ -236,28 +236,24 @@ public class Validate
             return getError("Missing decorator", ErrorCodes.MISSING_DECORATOR,  decorator: "language" );
 
     }
-    /*function validateEntity(params) {
-        if (!isObject(params.entity))
-            return getError('Invalid or missing entity parameter');
 
-        if (!Object.values(EntityKind).includes(params.entity.kind))
-            return getError('Unsupported or missing entity kind parameter');
+    //Validate binary contents
+    function validateBinaryContents(object @params) {
+        if (@params.binaryContents && !isString(@params.binaryContents))
+            return getError("Invalid binary contents parameter");
+    }
 
-        if (!isObject(params.entity.original))
-            return getError('Invalid or missing entity original parameter');
+    public ErrorDTO bodyMethod(requestDTO body){
+        switch (body.method) {
+            case Method.ENTITY_GET: 
+                return validateXdip(body.@params) ?? validateRequestParameters(body.@params);
 
-        for (const [name, decParams] of Object.entries(params.entity.original)) {
-            const err = validateDecorator(name, decParams);
-            if (err) return err;
+            case Method.ENTITY_GET_BINARY:
+                return validateXdip(body.@params);
+
+            case Method.ENTITY_CREATE:
+                return validateRequestParameters(body.@params) ?? validateEntity(body.@params) ?? validateBinaryContents(body.@params);
         }
-
-        // TODO: What decorators are even required?
-        if (!params.entity.original.name)
-            return getError('Missing decorator', ErrorCodes.MISSING_DECORATOR, { decorator: 'name' });
-
-        if (!params.entity.original.language)
-            return getError('Missing decorator', ErrorCodes.MISSING_DECORATOR, { decorator: 'language' });
-
-    }*/
+    }
 }
 
