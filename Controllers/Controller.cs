@@ -10,7 +10,6 @@ namespace TDK_Boilerplate_C_.Controllers;
 [Route("sample-connector")]  // Base url of controller
 public class Controller : ControllerBase
 {
-
     [HttpPost] // End-point
     public ResponseDto Post(RequestDto req)
     {
