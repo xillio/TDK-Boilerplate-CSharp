@@ -1,4 +1,4 @@
-public enum ErrorCodes {
+public enum ErrorCode {
     AUTHORIZATION_FAILED = 0,
     CONNECTOR_OPERATION_FAILED = 10,
     ENTITY_ALREADY_EXISTS = 20,

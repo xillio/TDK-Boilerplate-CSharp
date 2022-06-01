@@ -1,4 +1,4 @@
-public enum EntityKind {
-    FILE = "File",
-    FOLDER = "Folder"
+public class EntityKind {
+    public static string FILE = "File";
+    public static string FOLDER = "Folder";
 }

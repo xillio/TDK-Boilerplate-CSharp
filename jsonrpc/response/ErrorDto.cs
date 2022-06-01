@@ -6,12 +6,12 @@ using TDK_Boilerplate_C_.jsonrpc.response;
 
 namespace TDK_Boilerplate_C_.jsonrpc.response;
 
-public class ErrorDto : ResponseDto
+public class ErrorDto
 {
     public int code { get; set; } 
 
     public string message { get; set; }
 
-    public object data { get; set; }
+    public object? data { get; set; }
 
 }

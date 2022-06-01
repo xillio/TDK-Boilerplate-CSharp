@@ -6,6 +6,10 @@ public class ResponseDto
 
     public string id { get; set; }
 
+    public ErrorDto? error { get; set; }
+
+    public ResultDto? result { get; set; }
+
 }
 
 

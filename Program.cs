@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 var app = builder.Build();
-
+/*
 app.UseExceptionHandler(c => c.Run(async context =>
 {
     var exception = context.Features
@@ -14,7 +14,7 @@ app.UseExceptionHandler(c => c.Run(async context =>
     var response = new { error = exception.Message };
     await context.Response.WriteAsJsonAsync(response);
 }));
-
+*/
 app.MapControllers();
 
 app.Run();
