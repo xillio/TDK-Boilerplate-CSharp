@@ -35,7 +35,7 @@ public class FileService : AbstractService {
             var ex = new Exception(ErrorCode.INVALID_CONFIGURATION + " Invalid Configuration");
             throw ex;
         }
-        return "./contents" + url.LocalPath;
+        return "./contents" + (url.LocalPath.EndsWith('/') ? url.LocalPath.Substring(0, url.LocalPath.Length-1) : url.LocalPath);
     }
 
     // Path (assumed to start with ./contents/) -> XDIP.
@@ -53,9 +53,9 @@ public class FileService : AbstractService {
     
     public override Output get(object config, object xdip){
         var xPath = fromXdip(xdip.ToString() ?? "");
-        
-        var stat = new FileInfo(""); 
+         
         // Check if it exists.
+        FileInfo stat;
         try {
             stat = new FileInfo(xPath);
         } catch (Exception err){
@@ -76,14 +76,13 @@ public class FileService : AbstractService {
 
     public override List<Output> getChildren(object config, object xdip){
         var xPath = fromXdip(xdip.ToString());
-        
-        var stat = new FileInfo(""); 
+         
         // Check if it exists.
+        FileInfo stat;
         try {
             stat = new FileInfo(xPath);
         } catch (Exception err){
-            var ex = new Exception(ErrorCode.NO_SUCH_ENTITY + " No Such Entity " + err.Message);
-            throw ex;
+            throw new Exception(ErrorCode.NO_SUCH_ENTITY + " No Such Entity " + err.Message);
         }
         var attr = stat.Attributes;
 
@@ -91,32 +90,49 @@ public class FileService : AbstractService {
             return new List<Output>();
         }
 
-        var children = Directory.GetFiles(xPath);
         var result = new List<Output>();
-        
+
+        // Get all files
+        var children = Directory.GetFiles(xPath).Select(Path.GetFileName);        
         foreach (var child in children){
             var xdipChild = childXdip(xdip.ToString(), child);
             var pathChild = fromXdip(xdipChild);
             var statChild = new FileInfo(pathChild);
-            var attrChild = statChild.Attributes;
 
             result.Add( new Output {
                 xdip = xdipChild,
-                isFolder = attrChild.HasFlag(FileAttributes.Directory),
+                isFolder = false,
                 created = statChild.CreationTime,
                 modified = statChild.LastWriteTime,
                 systemName = Path.GetFileName(child),
                 size = (int)statChild.Length
             });
         }
+
+        // Get all directories
+        children = Directory.GetDirectories(xPath).Select(Path.GetFileName);        
+        foreach (var child in children){
+            var xdipChild = childXdip(xdip.ToString(), child);
+            var pathChild = fromXdip(xdipChild);
+            var statChild = new DirectoryInfo(pathChild);
+
+            result.Add( new Output {
+                xdip = xdipChild,
+                isFolder = true,
+                created = statChild.CreationTime,
+                modified = statChild.LastWriteTime,
+                systemName = Path.GetFileName(child)
+            });
+        }
+
         return result;
     }
 
     public override string getBinary(object config, object xdip){
         var xPath = fromXdip(xdip.ToString());
         
-        var stat = new FileInfo(""); 
         // Check if it exists.
+        FileInfo stat;
         try {
             stat = new FileInfo(xPath);
         } catch (Exception err){

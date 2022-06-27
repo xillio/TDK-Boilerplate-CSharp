@@ -105,10 +105,10 @@ public class Execute {
         object? config = getProperty(body.@params, "config");
         try{
             if (!service.validate(config)){
-                getError("invalid config parameter", ErrorCode.INVALID_CONFIGURATION);
+                return getError("invalid config parameter", ErrorCode.INVALID_CONFIGURATION);
             }
             if (!service.authorize(config)){
-                getError("Failed to authorize request", ErrorCode.AUTHORIZATION_FAILED);
+                return getError("Failed to authorize request", ErrorCode.AUTHORIZATION_FAILED);
             }
 
             if (body.method == Method.ENTITY_GET){
@@ -122,7 +122,7 @@ public class Execute {
             }
         }
         catch(Exception err){
-            getError(err.Message, ErrorCode.CONNECTOR_OPERATION_FAILED);
+            return getError(err.Message, ErrorCode.CONNECTOR_OPERATION_FAILED);
         }
         return null;
     }
