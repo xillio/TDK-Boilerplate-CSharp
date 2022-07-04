@@ -18,7 +18,10 @@ public class Controller : ControllerBase
 
         if (res != null) return res;
         
-        Execute ex = new Execute(req, new FileService());
+        // Define here which service to use
+        var service = new FileService();
+        
+        Execute ex = new Execute(req, service);
         ResponseDto? res2 = ex.run();
 
         if (res2 != null) return res2;
