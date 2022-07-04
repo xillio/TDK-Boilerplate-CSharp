@@ -122,7 +122,7 @@ public class Execute {
             }
         }
         catch(Exception err){
-            return getError(err.Message, ErrorCode.CONNECTOR_OPERATION_FAILED);
+            return getError(err.Message, (ErrorCode)err.HResult);
         }
         return null;
     }

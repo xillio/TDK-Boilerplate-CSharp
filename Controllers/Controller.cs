@@ -25,10 +25,10 @@ public class Controller : ControllerBase
 
         ResponseDto err = new ResponseDto{
             jsonrpc = ProtocolVersion.V2_0, 
-            id = "6",
+            id = req.id,
             error = new ErrorDto{
-                code = 404,
-                message = "test error response ",
+                code = (int)ErrorCode.CONNECTOR_OPERATION_FAILED,
+                message = "Controller failed to execute JSON RPC",
                 data = new object()
             }
         };

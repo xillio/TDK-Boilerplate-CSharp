@@ -31,8 +31,9 @@ public class FileService : AbstractService {
     public string fromXdip(string xdip){
         var url = new Uri(xdip);
 
-        if ('/' + url.Host != appConfigPath){ // if ('/' + url.hostname !== this.appConfig.path)
-            var ex = new Exception(ErrorCode.INVALID_CONFIGURATION + " Invalid Configuration");
+        if ('/' + url.Host != appConfigPath){
+            var ex = new Exception("Invalid Configuration");
+            ex.HResult = (int)ErrorCode.INVALID_CONFIGURATION;
             throw ex;
         }
         return "./contents" + (url.LocalPath.EndsWith('/') ? url.LocalPath.Substring(0, url.LocalPath.Length-1) : url.LocalPath);
@@ -40,7 +41,7 @@ public class FileService : AbstractService {
 
     // Path (assumed to start with ./contents/) -> XDIP.
     public string toXdip(string xPath){
-        return "xdip:/" + appConfigPath + xPath.Substring(10); // + this.appConfig.path + xPath.slice(10); 
+        return "xdip:/" + appConfigPath + xPath.Substring(10);
     }
 
     public override bool validate(object config){
@@ -55,13 +56,13 @@ public class FileService : AbstractService {
         var xPath = fromXdip(xdip.ToString() ?? "");
          
         // Check if it exists.
-        FileInfo stat;
-        try {
-            stat = new FileInfo(xPath);
-        } catch (Exception err){
-            var ex = new Exception(ErrorCode.NO_SUCH_ENTITY + " No Such Entity " + err.Message);
+        FileInfo stat = new FileInfo(xPath);        
+        if (!File.Exists(xPath) && !Directory.Exists(xPath)){
+            var ex = new Exception("No Such Entity Exists");
+            ex.HResult =  (int)ErrorCode.NO_SUCH_ENTITY;
             throw ex;
         }
+
         var attr = stat.Attributes;
 
         return new Output {
@@ -78,12 +79,13 @@ public class FileService : AbstractService {
         var xPath = fromXdip(xdip.ToString());
          
         // Check if it exists.
-        FileInfo stat;
-        try {
-            stat = new FileInfo(xPath);
-        } catch (Exception err){
-            throw new Exception(ErrorCode.NO_SUCH_ENTITY + " No Such Entity " + err.Message);
+        FileInfo stat = new FileInfo(xPath);        
+        if (!File.Exists(xPath) && !Directory.Exists(xPath)){
+            var ex = new Exception("No Such Entity Exists");
+            ex.HResult =  (int)ErrorCode.NO_SUCH_ENTITY;
+            throw ex;
         }
+
         var attr = stat.Attributes;
 
         if (!attr.HasFlag(FileAttributes.Directory)){
@@ -93,7 +95,7 @@ public class FileService : AbstractService {
         var result = new List<Output>();
 
         // Get all files
-        var children = Directory.GetFiles(xPath).Select(Path.GetFileName);        
+        var children = Directory.GetFiles(xPath).Select(Path.GetFileName);
         foreach (var child in children){
             var xdipChild = childXdip(xdip.ToString(), child);
             var pathChild = fromXdip(xdipChild);
@@ -132,17 +134,18 @@ public class FileService : AbstractService {
         var xPath = fromXdip(xdip.ToString());
         
         // Check if it exists.
-        FileInfo stat;
-        try {
-            stat = new FileInfo(xPath);
-        } catch (Exception err){
-            var ex = new Exception(ErrorCode.NO_SUCH_ENTITY + " No Such Entity " + err.Message);
+        FileInfo stat = new FileInfo(xPath);        
+        if (!File.Exists(xPath) && !Directory.Exists(xPath)){
+            var ex = new Exception("No Such Entity Exists");
+            ex.HResult =  (int)ErrorCode.NO_SUCH_ENTITY;
             throw ex;
         }
+        
         var attr = stat.Attributes;
 
         if (attr.HasFlag(FileAttributes.Directory)){
-            var ex = new Exception(ErrorCode.NO_BINARY_CONTENT + " No Binary Content");
+            var ex = new Exception("No Binary Content");
+            ex.HResult = (int)ErrorCode.NO_BINARY_CONTENT;
             throw ex;
         }
 
