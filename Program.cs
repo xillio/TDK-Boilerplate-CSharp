@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
+using System.Text.Json.Serialization;
 using TDK_Boilerplate_C_.jsonrpc.response; 
 using System.Net.Mime;
 
@@ -26,6 +27,10 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options => {
 
         return result;
     };
+});
+
+builder.Services.AddMvc().AddJsonOptions(options => {
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
 var app = builder.Build();
